@@ -42,7 +42,7 @@ function App() {
   return (
     <Router >
       <Navbar>
-        {user && <User user={user} logout={onLogout}/>}
+        {user && <User user={user} onLogout={onLogout}/>}
       </Navbar>
       <Routes/>
     </Router>
