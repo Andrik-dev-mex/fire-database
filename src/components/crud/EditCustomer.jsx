@@ -24,37 +24,60 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const EditCustomer = () => {
+const EditCustomer = (props) => {
   const classes = useStyles();
   const [customer, setCustomer] = useState({
-    name:"",
-    lastname:"",
+    name: "",
+    lastname: "",
     email: "",
     job: "",
     phone: "",
   });
 
+  const { uid } = props.match.params;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    customerEdit();
+    customerEdit(uid);
   };
 
-  const customerEdit = () => {
+  const customerEdit = (id) => {
+    const refCustomerUpdate = firebase.database().ref(`/customers/${id}`);
+    refCustomerUpdate
+      .update(customer)
+      .then((snapshot) => {
+          props.history.push("/customers");
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.message.includes("permission_denied")) {
+          props.history.push("/login");
+        }
+      });
+  };
 
-  }
-
-  const handleChange =(e) => {
-
+  const handleChange = (e) => {
+    setCustomer({ ...customer, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
-    firebase.database().ref("/customers")
-    .once('value')
-    .then(snapshot => {
+    firebase
+      .database()
+      .ref(`/customers/${uid}`)
+      .once("value")
+      .then((snapshot) => {
+        setCustomer(snapshot.val());
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.message.includes("permission_denied")) {
+          props.history.push("/login");
+        }
+      });
+      //eslint-disable-next-line
+  }, []);
 
-    })
-  },[]);
-
+  console.log(customer);
   return (
     <Fragment>
       <form
@@ -68,7 +91,7 @@ const EditCustomer = () => {
             name="name"
             label="Nombre"
             variant="outlined"
-            defaultValue={customer.name}
+            value={customer.name}
             onChange={handleChange}
           />
           <TextField
@@ -76,7 +99,7 @@ const EditCustomer = () => {
             label="Apellidos"
             variant="outlined"
             className={classes.fields}
-            defaultValue={customer.lastname}
+            value={customer.lastname}
             onChange={handleChange}
           />
           <TextField
@@ -84,7 +107,7 @@ const EditCustomer = () => {
             label="Correo Electronico"
             variant="outlined"
             className={classes.fields}
-            defaultValue={customer.email}
+            value={customer.email}
             onChange={handleChange}
           />
         </div>
@@ -93,7 +116,7 @@ const EditCustomer = () => {
             name="job"
             label="Trabajo"
             variant="outlined"
-            defaultValue={customer.job}
+            value={customer.job}
             onChange={handleChange}
           />
           <TextField
@@ -101,12 +124,12 @@ const EditCustomer = () => {
             label="Telefono"
             variant="outlined"
             className={classes.fields}
-            defaultValue={customer.phone}
+            value={customer.phone}
             onChange={handleChange}
           />
         </div>
         <div className={classes.container}>
-          <Button type={"submit"} variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary">
             Guardar
           </Button>
         </div>

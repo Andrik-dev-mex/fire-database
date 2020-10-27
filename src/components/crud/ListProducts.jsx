@@ -19,14 +19,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function ListProducts({ title, urlImage, nameProduct, description }) {
+export default function ListProducts({ title, id, sku,  urlImage, nameProduct, description, oldImage, onDelete, price}) {
   const classes = useStyles();
-
   return (
     <div>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt={title} src={urlImage} />
+          <Avatar src={urlImage} alt = {title}/>
         </ListItemAvatar>
         <ListItemText
           primary={nameProduct}
@@ -38,16 +37,18 @@ export default function ListProducts({ title, urlImage, nameProduct, description
                 className={classes.inline}
                 color="textPrimary"
               >
-                {description}
+                {"sku: " + sku + " | $"}{price}
               </Typography>
+              { " - " + description}
+              
             </React.Fragment>
           }
         />
         <ListItemSecondaryAction>
-          <Button variant="contained" color="default" className={classes.button}>
+          <Button variant="contained" color="primary" className={classes.button}>
             Actualizar
           </Button>
-          <Button variant="contained" color="default">
+          <Button variant="contained" color="secondary" onClick={() => {onDelete(id, oldImage)}}>
             Eliminar
           </Button>
         </ListItemSecondaryAction>

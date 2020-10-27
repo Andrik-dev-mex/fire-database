@@ -61,25 +61,26 @@ const NewCustomer = (props) => {
   };
 
   useEffect(() => {
-    firebase
-      .database()
-      .ref("/customers")
-      .then((snapshot) => {})
+    const customerRef = firebase.database().ref("/customers");
+
+    customerRef
+      .once("value")
+      .then((res) => {
+        console.log(res);
+      })
       .catch((error) => {
         console.log(error);
         if (error.message.includes("permission_denied")) {
           props.history.push("/login");
         }
       });
-    //eslint-disable-next-line
-  }, []);
+  });
 
-  console.log(customer);
   return (
     <Fragment>
       <form
         className={classes.root}
-        noValidate
+        validate
         autoComplete="off"
         onSubmit={handleSubmit}
       >

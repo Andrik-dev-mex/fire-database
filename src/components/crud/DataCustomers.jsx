@@ -1,8 +1,9 @@
-import React, { Fragment } from "react";
+import React from "react";
 import TableCell from "@material-ui/core/TableCell";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import TableRow from "@material-ui/core/TableRow";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -14,11 +15,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DataCustomers = ({ index, name, lastname, email, bussines, phone, iud }) => {
+const DataCustomers = ({
+  index,
+  name,
+  lastname,
+  email,
+  bussines,
+  phone,
+  iud,
+  deleteCustomer,
+}) => {
   const classes = useStyles();
 
   return (
-    <Fragment>
+    <TableRow>
       <TableCell component="th" scope="row">
         {index}
       </TableCell>
@@ -29,17 +39,22 @@ const DataCustomers = ({ index, name, lastname, email, bussines, phone, iud }) =
       <TableCell align="center">{phone}</TableCell>
       <TableCell align="center">
         <Button variant="contained" color="primary">
-          <Link to={`/editcustomer/${iud}`}>Editar</Link>
+          <Link to={`/editcustomer/${iud}`} className={classes.link}>
+            Editar
+          </Link>
         </Button>
         <Button
           className={classes.button}
           variant="contained"
           color="secondary"
+          onClick={() => {
+            deleteCustomer(iud);
+          }}
         >
           Eliminar
         </Button>
       </TableCell>
-    </Fragment>
+      </TableRow>
   );
 };
 

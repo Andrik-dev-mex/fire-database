@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
+import { loadProduct } from "./../../utils/dbUtils";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,27 +39,44 @@ function Products(props) {
     setProducts([...products]);
   };
 
+  const deleteProduct = async (id, nameImage) => {
+    try {
+      const ref = firebase.database().ref(`/products/${id}`);
+      const refImage = firebase.storage().ref(`/images/${nameImage}`);
+      await refImage.delete();
+      await ref.remove();
+      window.location.reload({forcedRealod : true})
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const refProducts = firebase.database().ref("/products")
+    const refProducts = firebase.database().ref("/products");
 
     refProducts.on(
-      'child_added',
-      snapshot => {
+      "child_added",
+      (snapshot) => {
         const productItem = snapshot.val();
-        addProduct(productItem);
+        productItem.id = snapshot.key;
+        const deleteImage = productItem.image;
+        loadProduct(snapshot.key)
+        .then(data => {
+          productItem.image = data.image;
+          productItem.oldImage = deleteImage;
+          addProduct(productItem);
+        })
       },
-      error => {
+      (error) => {
         console.log(error);
-        if (error.message.includes('permission_denied')) {
-          props.history.push('/login');
+        if (error.message.includes("permission_denied")) {
+          props.history.push("/login");
         }
       }
     );
     // eslint-disable-next-line
   }, []);
-
-  
-
+  console.log(products);
   return (
     <div>
       <div className={classes.containerButton}>
@@ -70,12 +88,20 @@ function Products(props) {
       </div>
       <div className={classes.container}>
         <List className={classes.root}>
-          <ListProducts
-            title={"product"}
-            urlImage={"https://www.google.com"}
-            nameProduct={"Product One"}
-            description={"producto de prueba"}
-          />
+          {products.map((product, index) => (
+            <ListProducts
+              key={index}
+              sku={product.sku}
+              title={product.name}
+              urlImage={product.image}
+              nameProduct={product.name}
+              description={product.description}
+              id={product.id}
+              onDelete={deleteProduct}
+              price={product.price}
+              oldImage={product.oldImage}
+            />
+          ))}
         </List>
       </div>
     </div>

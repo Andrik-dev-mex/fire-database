@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   button: {
-    marginLeft: "10px"
-  }
+    marginLeft: "10px",
+  },
 }));
 
 const NewProduct = (props) => {
@@ -53,17 +53,34 @@ const NewProduct = (props) => {
   };
 
   const handleChangeImage = (e) => {
-    setImage( e.target.value )
+    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    setImage({
+      type: file.type.split("/")[1],
+      file,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addProduct();
-  };
+    if (image) {
+      product.image = `${product.sku}.${image.type}`;
+      firebase
+        .storage()
+        .ref(`/images/${product.image}`)
+        .put(image.file)
+        .then(() => {
+          firebase
+            .storage()
+            .ref()
+            .child(`/images/${product.image}`)
+            .getDownloadURL()
+            .then((url) => {
+              setProduct({ ...product, image: url });
+            });
+        });
+    }
 
-  const validateFields = () => {};
-
-  const addProduct = () => {
     firebase
       .database()
       .ref("/products")
@@ -78,10 +95,6 @@ const NewProduct = (props) => {
       });
   };
 
-  const uploadImage = (image) => {
-    const refImage = firebase.storage().ref("/image");
-  };
-  
   return (
     <div className={classes.container}>
       <form
@@ -139,7 +152,7 @@ const NewProduct = (props) => {
             variant="outlined"
           />
           <div className={classes.containerTwo}>
-          <label htmlFor="fileImg">
+            <label htmlFor="fileImg">
               <IconButton
                 color="primary"
                 aria-label="upload picture"
@@ -165,14 +178,13 @@ const NewProduct = (props) => {
               className={classes.input}
               id="fileImage"
               type="file"
-              onChange ={handleChangeImage}
+              onChange={handleChangeImage}
             />
-            
+
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              disabled={validateFields()}
               type="submit"
             >
               Guardar

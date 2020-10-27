@@ -44,16 +44,28 @@ function Customers(props) {
     setCustomers([...customers]);
   };
 
+  const deleteCustomer = async (id) => {
+    try {
+      const refCustomers = firebase.database().ref(`/customers/${id}`);
+      await refCustomers.remove();
+      window.location.reload(true);
+    } catch (error) {
+      console.log(error);
+      if (error.message.includes("permission_denied")) {
+        props.history.push("/login");
+      }
+    }
+  };
+
   useEffect(() => {
     const refCustomers = firebase.database().ref("/customers");
 
     refCustomers.on(
       "child_added",
       (snapshot) => {
-        const key = snapshot.key()
         const newCustomer = snapshot.val();
+        newCustomer.id = snapshot.key;
         addCustomers(newCustomer);
-        console.log(key);
       },
       (error) => {
         console.log(error);
@@ -62,6 +74,8 @@ function Customers(props) {
         }
       }
     );
+
+    //eslint-disable-next-line
   }, []);
   return (
     <Fragment>
@@ -87,19 +101,19 @@ function Customers(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                {customers.map((customer, index) => (
-                  <DataCustomers
-                    index={index + 1}
-                    name={customer.name}
-                    iud = {customer.id}
-                    lastname={customer.lastname}
-                    email={customer.email}
-                    bussines={customer.job}
-                    phone={customer.phone}
-                  />
-                ))}
-              </TableRow>
+              {customers.map((customer, index) => (
+                <DataCustomers
+                  key={index}
+                  index={index + 1}
+                  name={customer.name}
+                  iud={customer.id}
+                  lastname={customer.lastname}
+                  email={customer.email}
+                  bussines={customer.job}
+                  phone={customer.phone}
+                  deleteCustomer={deleteCustomer}
+                />
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
