@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Alert from "./Alert";
+import Alert from "../Alert";
 import Grid from '@material-ui/core/Grid';
 import { Link } from  "@material-ui/core"
 import Typography from '@material-ui/core/Typography';
@@ -16,12 +16,12 @@ const MyLink = React.forwardRef((props, ref) => (
 ));
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,

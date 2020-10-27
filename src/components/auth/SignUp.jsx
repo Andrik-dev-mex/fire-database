@@ -12,7 +12,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
 
-import Alert from "./Alert";
+import Alert from "../Alert";
 
 //igual para el link
 const MyLink = React.forwardRef((props, ref) => (

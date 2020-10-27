@@ -39,7 +39,7 @@ export default function CardMenu({ url, title, description, viewItem }) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" variant="contained" color="primary" onClick={viewItem}>
+        <Button size="small" variant="contained" color="primary">
           <Link to={viewItem} className={classes.link} >Ver</Link>
         </Button>
       </CardActions>
