@@ -1,33 +1,34 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  container: {
-    display: "flex",
-    padding: "15px",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  fields: {
-    marginLeft: "5px",
-  },
-}));
+const useStyles = makeStyles((theme) => {
+  return {
+    root: {
+      width: "100%",
+    },
+    container: {
+      display: "flex",
+      padding: "15px",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    fields: {
+      marginLeft: "5px",
+    },
+  };
+});
 
-const NewCustomer = (props) => {
+const EditCustomer = () => {
   const classes = useStyles();
-
   const [customer, setCustomer] = useState({
-    name: "",
-    lastname: "",
+    name:"",
+    lastname:"",
     email: "",
     job: "",
     phone: "",
@@ -35,46 +36,25 @@ const NewCustomer = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    addCustomer();
+    customerEdit();
   };
 
-  const handleChange = (e) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
-  };
+  const customerEdit = () => {
 
-  const addCustomer = () => {
-    firebase
-      .database()
-      .ref("/customers")
-      .push(customer)
-      .then((snapshot) => {
-        if (snapshot) {
-          props.history.push("/customers");
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          console.log(error);
-        }
-      });
+  }
+
+  const handleChange =(e) => {
+
   };
 
   useEffect(() => {
-    firebase
-      .database()
-      .ref("/customers")
-      .then((snapshot) => {})
-      .catch((error) => {
-        console.log(error);
-        if (error.message.includes("permission_denied")) {
-          props.history.push("/login");
-        }
-      });
-    //eslint-disable-next-line
-  }, []);
+    firebase.database().ref("/customers")
+    .once('value')
+    .then(snapshot => {
 
-  console.log(customer);
+    })
+  },[]);
+
   return (
     <Fragment>
       <form
@@ -135,4 +115,4 @@ const NewCustomer = (props) => {
   );
 };
 
-export default withRouter(NewCustomer);
+export default withRouter(EditCustomer);

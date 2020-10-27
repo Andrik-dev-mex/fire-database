@@ -7,7 +7,7 @@ import Customers from "./components/crud/Customers";
 import SignUp from "./components/auth/SignUp";
 import NewProduct from "./components/crud/NewProduct";
 import NewCustomer from "./components/crud/NewCustomer";
-
+import EditCustomer from "./components/crud/EditCustomer";
 export default function Routes() {
   return (
     <Switch>
@@ -18,6 +18,7 @@ export default function Routes() {
       <Route exact path="/signup" component={SignUp} />
       <Route exact path="/addproduct" component={NewProduct} />
       <Route exact path ="/addcustomer" component={NewCustomer}/>
+      <Route exact path ="/editcustomer/:uid" component={EditCustomer}/>
     </Switch>
   )
 }
