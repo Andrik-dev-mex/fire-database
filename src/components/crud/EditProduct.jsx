@@ -47,7 +47,7 @@ const EditProduct = (props) => {
     image: "",
   });
 
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
   const { id } = props.match.params;
 
   const handleChange = (e) => {
@@ -66,7 +66,7 @@ const EditProduct = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(image);
-    if (!product.image) {
+    if (image) {
       product.image = `${product.sku}.${image.type}`;
       firebase
         .storage()
