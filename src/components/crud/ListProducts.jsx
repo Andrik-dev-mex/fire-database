@@ -8,24 +8,38 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   inline: {
     display: "inline",
   },
   button: {
-    marginRight: "5px"
+    marginRight: "5px",
+  },
+  link:{
+    textDecoration: "none",
+    color: "white"
   }
 }));
 
-
-export default function ListProducts({ title, id, sku,  urlImage, nameProduct, description, oldImage, onDelete, price}) {
+export default function ListProducts({
+  title,
+  id,
+  sku,
+  urlImage,
+  nameProduct,
+  description,
+  oldImage,
+  onDelete,
+  price,
+}) {
   const classes = useStyles();
   return (
     <div>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar src={urlImage} alt = {title}/>
+          <Avatar src={urlImage} alt={title} />
         </ListItemAvatar>
         <ListItemText
           primary={nameProduct}
@@ -37,24 +51,33 @@ export default function ListProducts({ title, id, sku,  urlImage, nameProduct, d
                 className={classes.inline}
                 color="textPrimary"
               >
-                {"sku: " + sku + " | $"}{price}
+                {"sku: " + sku + " | $"}
+                {price}
               </Typography>
-              { " - " + description}
-              
+              {" - " + description}
             </React.Fragment>
           }
         />
         <ListItemSecondaryAction>
-          <Button variant="contained" color="primary" className={classes.button}>
-            Actualizar
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            <Link to={`editproduct/${id}`} className={classes.link}>Actualizar</Link>
           </Button>
-          <Button variant="contained" color="secondary" onClick={() => {onDelete(id, oldImage)}}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              onDelete(id, oldImage);
+            }}
+          >
             Eliminar
           </Button>
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="inset" component="li" />
-      </div>
+    </div>
   );
-};
-
+}
